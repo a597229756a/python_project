@@ -1,0 +1,71 @@
+
+version: '3'
+services:
+  web:                              # 服务id
+    image: python:3.12.3            # 镜像
+    # depends_on:                   # 先安装mysql、redis后安装web，解决依赖问题
+    #   - mysql
+    #   - redis
+    container_name: web_container
+    # environment:                  # 环境变量
+    # build: .                        # 使用当前目录的Dockerfile构建镜像
+    volumes:                        # 挂载本地代码到容器内部，便于实时调试和开发
+      - .:/bin/usr/web              # 将当前目录挂载到容器的/app目录下
+    working_dir: /bin/usr/web
+    # entrypoint: ["/bin/sh", "/app/entrypoint.sh"] # 将pip指令和python指令放入sh文件中
+    command: >
+      /bin/bash -c "pip install --no-cache-dir -r requirements.txt && python main.py"
+    ports:
+      - "5000:5000"       # 端口映射配置，和端口暴露
+    networks:
+      - mynet
+    # healthcheck:
+    #   test: ["CMD", "curl","-f","http://localhost"]
+    #   interval: 1m30s               # 前多少秒不检查
+    #   timeout: 30s                  # 等待时间
+    #   retries: 5                    # 尝试5次
+    #   start_period: 30s
+    # sysctls:
+    #   net.core.somaxconn:1024
+    #   net.ipv4.tcp_syncookies:0
+    # ulimits:
+    #   nproc: 65535                  # 修改容器内操作系统的最大进程数
+    #   nofile:
+    #     soft:2000
+    #     hard:4000
+  portainer:
+    container_name: portainer
+    image: portainer/portainer
+    ports:
+      - "8000:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data/data portainer/portainer
+    networks:
+      - mynet
+
+volumes:                          # 声明自动卷
+  portainer_data:                 
+    external:
+      true  # 使用自定义网桥，但是必须先创建：使用外部命令 docker volume create --name=portainer_data
+
+networks: # 创建网桥
+  mynet:
+    external:
+      true  # 使用自定义网桥，但是必须先创建：使用外部命令 docker network create mynet
+
+# docker-compose build  # 构建环境
+# docker-compose up -d  # 启动所有容器
+  # --no-recreate       # 启动处于停止状态的容器
+  # --build
+# docker-compose config # 验证compose语法是否正确
+# docker-compose exec 服务ID（不是容器名） bash 进入制定容器
+# docker-compose ps     # 打印所有容器信息
+# docker-compose restart
+# docker-compose start
+# docker-compose stop
+# docker-compose rm -f 强制删除 -v 删除容器挂载卷
+# docker-compose logs
+
+
