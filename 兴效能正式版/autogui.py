@@ -3,6 +3,7 @@ import pandas as pd
 import threading
 import base64
 import os
+import win32gui
 import numpy as np
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog, colorchooser
@@ -30,7 +31,7 @@ from shutil import rmtree
 from typing import Callable, Iterable
 from traceback import format_tb, format_exc
 from operator import sub, add, lt, le, gt, ge, eq, ne
-# from excel2img import export_img
+from excel2img import export_img
 from PIL import Image
 from globals import *
 
@@ -129,18 +130,13 @@ class AutoGui(tk.Tk):
         Creat a new settings file if settings == True.
         """
         super().__init__()
-        # 每组的复选框变量
         self.exists = tk.BooleanVar(self, True)
         self.reset = False
-        # 如果pkxee不存在，则创建pkxee目录
         if not os.path.exists(CACHE):
             os.mkdir(CACHE)
-        # 如果pkxee中settings.json文件存在
         if os.path.isfile(settings) and os.path.exists(settings):
             try:
-                # 打开settings.json
                 with open(settings) as json:
-                    # 读取settings中的信息
                     settings_dict = load(json)
                 assert isinstance(settings_dict, dict)
                 if settings_dict.get("version", "") <= VERSION:
@@ -151,16 +147,13 @@ class AutoGui(tk.Tk):
                 self.showwarning("设置加载失败，应为字典构成的JSON文件")
                 settings = ""
         elif settings:
-            # 如果settings是字符串
             settings = settings if isinstance(settings, str) else SETTINGS
         self.title(TITLE)
 
         def set_var(**kw):
             if kw or messagebox.askyesno(TITLE, "确认还原所有参数？"):
                 for k in global_vars:
-                    # 通过__setattr__将global_vars中的k设置为self变量
-                    self.__setattr__(k, kw.get(k, globals().get(k)))    # kw.get(k,value) 但k没有时，取value的值
-                # 将TAGS变量按照_前进行分类
+                    self.__setattr__(k, kw.get(k, globals().get(k)))
                 for k, v in self.TAGS.items():
                     if (
                         ("时" in v or "T" in v)
@@ -2243,6 +2236,7 @@ class AutoGui(tk.Tk):
                 "延误未起飞",
                 "大面积航延",
                 "启动标准",
+                "四地八场",
             ]
         }
         for k in ("CTOT", "json"), ("COBT", "json"), ("RATES", "xlsx"):
@@ -3357,7 +3351,7 @@ class AutoGui(tk.Tk):
                 img = img.replace(
                     ".png", f"{datetime.now().strftime(r'_%m%d_%H%M%S')}.png"
                 )
-            # export_img(file, img, sheetname, sheetrange)
+            export_img(file, img, sheetname, sheetrange)
             return img
         except Exception as exception:
             exception = repr(exception)
@@ -3909,6 +3903,7 @@ class AutoGui(tk.Tk):
                 ]
                 if self.rates_bind[0]:
                     self.rates_bind[2]("<Leave>", self.rates_bind[0])
+                rates.append(self.fourlocation_tenvenuse())
                 self.HISTORY["RATES"].loc[now] = rates
 
                 # 计划下次更新
@@ -3945,7 +3940,7 @@ class AutoGui(tk.Tk):
                     self.msg_para[0].set(True)
 
                 # 效率指标刷新
-                for i, j in enumerate(self.HISTORY["RATES"].columns[:-1]):
+                for i, j in enumerate(self.HISTORY["RATES"].columns[:-2]):
                     if "执行" in j or "取消" in j:
                         continue
                     elif "大面积" in j:
@@ -3992,14 +3987,14 @@ class AutoGui(tk.Tk):
                 self.rates_bind[0] = self.rates_bind[1](
                     "<Leave>",
                     lambda *x: self.rates_action(
-                        *rates[:-1],
+                        *rates[:-2],
                         font=("Consolas", 11),
                         foreground="black",
                         width=3,
                     ),
                 )
                 self.rates_action(
-                    *rates[:-1], font=("Consolas", 11), foreground="black", width=3
+                    *rates[:-2], font=("Consolas", 11), foreground="black", width=3
                 )
 
                 threading.Thread(target=self.save_history).start()
@@ -6469,7 +6464,7 @@ class AutoGui(tk.Tk):
                                 "",
                                 v[2],
                                 v[3],
-                                f"标准：{np.int64(v[7].total_seconds()) // 60}分钟，ATA：{v[5].strftime("%H%M")}，{f"跑道：{v[6]}，" if v[6] else "" }"+ \
+                                f'标准：{np.int64(v[7].total_seconds()) // 60}分钟，ATA：{v[5].strftime("%H%M")}，{f"跑道：{v[6]}，" if v[6] else "" }'+ \
                                     k.format(f"{np.int64(v[4].total_seconds()) // 60}分钟"),
                             ]
                 else:
@@ -6491,7 +6486,7 @@ class AutoGui(tk.Tk):
             data = raw_data["执行_进港"]
             data = (
                 data.loc[data["flightTypeCode"].isin(TYPECODE)]
-                .loc[data["aibt"].notna() & data["baggageFirstTm"].isna()]
+                .loc[data["aibt"].notna() & data["baggageLastTm"].isna()]
                 .loc[data["operationStatusCode"] != "CNCL"]
             ).copy()
             for i in self.MONI.index:
@@ -6510,7 +6505,7 @@ class AutoGui(tk.Tk):
                             "",
                             v[2],
                             v[3],
-                            k.format(f"{np.int64(v[4].total_seconds()) // 60}分钟"),
+                            k.format(f"{np.int64(v[4].total_seconds()) // 60}分钟".replace("首件", "末件")),
                         ]
 
             # 离港监控
@@ -7108,7 +7103,7 @@ class AutoGui(tk.Tk):
             )
         return output
 
-    def get_alert(self) -> dict:
+    def get_alert1(self) -> dict:
         datetime_now = self.datetime_now()
         alert = [-1]
         alert_map = {
@@ -7218,6 +7213,305 @@ class AutoGui(tk.Tk):
         alerts["大面积航延"] = alert[0]
         alerts["启动标准"] = "；".join(alert[1:])
         return alerts
+
+    def get_alert(self) -> dict:
+        datetime_now = self.datetime_now()
+        timetuple = datetime_now.timetuple()
+        today = datetime(*timetuple[:3])
+        last_hour = datetime_now - timedelta(hours=1)
+        one_hour = datetime_now + timedelta(hours=1)
+        two_hour = datetime_now + timedelta(hours=2)
+        alert = [-1]
+        alert_map = {
+            -1: ["无", ""],
+            0: ["视情况启动调时","【视情况启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无）：启动条件（"],
+            1: ["立即启动调时","【立即启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无/视情况启动调时）：启动条件（"],
+        }
+        alerts = dict()
+
+        try:
+            session = self.get_session()
+            response = session.post(
+                self.URLS["大面积航延"],
+                headers=self.HEADER,
+                timeout=10,
+            )
+            if response.status_code != 200:
+                raise requests.ConnectionError(f"响应异常代码{response.status_code}")
+            else:
+                response = response.json().get("data")
+                alerts["预警条件"] = response.get("data1")
+                alerts["响应条件一"] = response.get("data2")
+                alerts["响应条件二"] = response.get("data5")
+                alerts["响应条件三"] = response.get("data6")
+                for i in alerts.values():
+                    assert isinstance(i, int)
+
+        except Exception:
+            self.update_log("大面积航延接口数据获取失败，采用计算值", "warn")
+
+            # 大面积航班延误预警
+            data = self.get_data("航班", outFlightTypeCode=TYPECODE)
+            data = data.loc[data["outAtot"].isna() & (data["outEstripStatus"] != "DEP")]
+            alerts["预警条件"] = data.loc[
+                data["outCtot"]
+                .fillna(datetime_now)
+                .map(lambda x: x if x >= datetime_now else datetime_now)
+                - data["outSobt"]
+                >= timedelta(hours=1.5)
+            ].__len__()
+
+            # 大面积航班延误响应检测条件一
+            alerts["响应条件一"] = data.loc[
+                datetime_now - data["outStot"] > timedelta(hours=1)
+            ].__len__()
+
+            # 大面积航班延误响应检测条件二、三
+            data = self.get_data("执行_离港", flightTypeCode=TYPECODE)
+            alerts["响应条件二"] = (
+                data.loc[data["operationStatusCode"] == "CNCL"]
+                .loc[data["sobt"] >= datetime_now]
+                .loc[data["sobt"] < datetime_now + timedelta(hours=2)]
+                .__len__()
+            )
+            alerts["响应条件三"] = (
+                data.loc[data["operationStatusCode"] == "CNCL"]
+                .loc[data["sobt"] >= datetime_now]
+                .loc[data["sobt"] < datetime_now + timedelta(hours=1)]
+                .__len__()
+            )
+            data = self.get_data("执行_进港", flightTypeCode=TYPECODE)
+            alerts["响应条件三"] += (
+                data.loc[data["operationStatusCode"] != "CNCL"]
+                .loc[data["eldt"] >= datetime_now]
+                .loc[data["eldt"] < datetime_now + timedelta(hours=1)]
+                .__len__()
+            )
+        for i in range(1,6):
+            match i:
+                case 1:
+                    if alerts["预警条件"] >= 10:
+                        alert_map[0].append(
+                            '1. 大兴机场启动大面积航班延误预警'
+                            )
+
+                    if (alerts['响应条件一'] >= 50 ) | (alerts["响应条件二"] >= 30) |  \
+                        ((datetime_now.hour >= 22 or datetime_now.hour < 6) & alerts["响应条件三"] >= 75):
+                        alert_map[1].append(
+                            "1. 大兴机场启动大面积航班延误红色响应"
+                            )
+                case 2:
+                    try:
+                        if (datetime_now.hour>=7 or datetime_now.hour<24):
+                            def neizhi(*args):
+                                data = self.get_data("航班", outFlightTypeCode=TYPECODE)
+
+                                # 进港的情况
+                                inaldt_data = (
+                                    data.loc[(data[args[0]]-datetime.now()) < timedelta(minutes=0)]
+                                        .sort_values(by=args[0],ascending=False)
+                                )
+                                inaldt_time = inaldt_data.iloc[0][args[0]]
+
+                                inaldt_now_sldt = (
+                                    data.loc[data[args[2]]>inaldt_time].__len__() 
+                                )
+                                inaldt_now_stot = (
+                                    data.loc[data[args[3]]>inaldt_time].__len__() 
+                                )
+
+                                # 出港的情况
+                                outatot_data = (
+                                    data.loc[(data[args[1]]-datetime.now()) < timedelta(minutes=0)]
+                                        .sort_values(by=args[1],ascending=False)
+                                )
+                                outatot_time = outatot_data.iloc[0][args[1]]
+
+                                outatot_now_sldt = (
+                                    data.loc[data[args[2]]>outatot_time].__len__() 
+                                )
+                                outatot_now_stot = (
+                                    data.loc[data[args[3]]>outatot_time].__len__() 
+                                )
+                                return [inaldt_time,inaldt_now_sldt,inaldt_now_stot,outatot_time,outatot_now_sldt,outatot_now_stot]
+
+                            re_list = neizhi(*["inAldt","outAtot","inSldt","outStot"])
+
+                            if (((re_list[0] < datetime_now - timedelta(minutes=20))&((re_list[1] > 9) |( re_list[1]+re_list[2] > 12))) | \
+                                ((re_list[3] < datetime_now - timedelta(minutes=20))&((re_list[5] > 9) |( re_list[4]+re_list[5] > 12))) 
+                                ):
+                                alert_map[0].append(
+                                    f'2.本场预计或目前已停止起飞或落地20分钟以上，且直接影响航班总量大于其高峰小时容量的20%;'
+                                )
+
+                            if (((re_list[0] < datetime_now - timedelta(minutes=60))&((re_list[1] > 24) |( re_list[1]+re_list[2] > 31))) | \
+                                ((re_list[3] < datetime_now - timedelta(minutes=60))&((re_list[5] > 24) |( re_list[4]+re_list[5] > 31))) 
+                                ):
+                                alert_map[1].append(
+                                    f'2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%'
+                                )
+                    except Exception:
+                        self.update_log("2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%", "warn")
+                case 3:
+
+                    data = self.get_data("执行_离港", flightTypeCode=TYPECODE)
+                    tis = {}
+                    
+                    for ti in ['stot','atot']:
+                        tis[f'{ti}_last_data'] = data.loc[data[ti] < datetime_now].loc[data[ti] > last_hour].__len__()
+                        tis[f'{ti}_one_data']  = data.loc[data[ti] < one_hour].loc[data[ti] > datetime_now].__len__()
+                        tis[f'{ti}_two_data']  = data.loc[data[ti] < two_hour].loc[data[ti] > one_hour].__len__()
+                    
+                    for i in tis.values():
+                        assert isinstance(i, int)
+
+                    if ( tis['atot_last_data']<tis['stot_last_data'] & \
+                        (tis['stot_one_data'] - tis['atot_last_data']) > 0 & \
+                        (tis['stot_two_data'] - tis['atot_last_data']) > 0 & \
+                        (tis['stot_one_data']+tis['stot_two_data'])-tis['atot_last_data']*2 >9
+                        ):
+                        alert_map[1].append(
+                            f'3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限，且溢出航班总量大于其高峰小时容量的20%'
+                        )
+
+                    if (tis['atot_last_data']<tis['stot_last_data'] & \
+                        (tis['stot_one_data'] - tis['atot_last_data'])/tis['atot_last_data'] > 0.2 & \
+                        (tis['stot_two_data'] - tis['atot_last_data'])/tis['atot_last_data'] > 0.2 & \
+                        (tis['stot_one_data']+tis['stot_two_data'])-tis['atot_last_data']*2 >24
+                        ):
+                        alert_map[1].append(
+                            f'3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限20%以上，且溢出航班总量大于其高峰小时容量的50%'
+                        )
+                case 4:
+                    last_two_hour = datetime_now - timedelta(minutes= 2 )
+                    data = self.get_data("航班", outFlightTypeCode=TYPECODE[:3])    # 筛选航班_性质为W/Z,C/B,L/W的航班
+                    takeoffs = {}
+                    count = 0
+                    for start_time,end_time in {last_two_hour:last_hour,last_hour:datetime_now}.items():
+                        data = data.loc[data["outSobt"] >= start_time].loc[data["outSobt"] < end_time].copy()  
+                        data = self.get_data("执行_进港", outFlightTypeCode=TYPECODE)
+
+
+                        for route in  ["ALL","CAN,SZX"]:
+                            if route == "ALL":
+                                re_data = data
+                            else :
+                                for fly in route.slplit(","):
+                                    re_data += data[data['outRoute']==route]
+                            if re_data.__len__():
+                                departing = re_data.loc[re_data["outAtot"].isna() | (re_data["outAtot"] > end_time)]
+                                takeoff_departing_delayed = departing.loc[
+                                    departing["outStot"] < end_time
+                                ].__len__()
+                                re_data.drop(departing.index, inplace=True)
+                                # 起飞正常性
+                                try:
+                                    takeoff_departed = re_data.loc[re_data["outAtot"] <= re_data["outStot"]].__len__()
+                                    takeoff_delayed = re_data.__len__() - takeoff_departed
+                                    takeoff = takeoff_departed / (
+                                        takeoff_departed + takeoff_departing_delayed + takeoff_delayed
+                                    )
+                                    takeoffs[f"{route}{count}"] = takeoff
+                                except ZeroDivisionError:
+                                    takeoffs[f"{route}{count}"] = 0
+                            else:
+                                takeoffs[f"{route}{count}"] = 0
+                        count += 1
+
+                    for i in takeoffs.values():
+                        assert isinstance(i, int)
+                    
+                    if ((takeoffs['ALL0'] < 0.5 & takeoffs['ALL1'] < 0.5 & takeoffs['ALL0'] != 0 & takeoffs['ALL1'] != 0) | \
+                        takeoffs["CAN,SZX0"] < 0.5 & takeoffs["CAN,SZX1" & takeoffs["CAN,SZX0"] !=0 , takeoffs["CAN,SZX0"] != 0] < 0.5
+                        ):
+                        alert_map[0].append(
+                            f'4.本场全向或特定方向，预计离港航班起飞正常率连续2小时低于50%'
+                        )
+                    
+                    data = self.get_data("执行_离港", flightTypeCode=TYPECODE)
+                    last_atot_len = (data.loc[data['atot'] > last_two_hour]
+                                     .loc[data['atot'] < datetime_now]
+                                     .__len__())
+                    last_stot_atot_len = (data.loc[data['atot'] > last_two_hour]
+                                     .loc[data['atot'] < datetime_now]
+                                     .loc[data['atot'].isna()]
+                                     .__len__())
+                    three_hour = (
+                        data.loc[data['stot'] > datetime_now]
+                        .loc[data['stot'] > datetime_now + timedelta(hours=3)]
+                        .__len__()
+                    )
+                    for i in [last_atot_len,last_stot_atot_len,three_hour]:
+                        assert isinstance(i, int)
+
+                    if last_atot_len < (last_stot_atot_len+three_hour)/3:
+                        alert_map[1].append(
+                            f'4.本场全向或特定方向，预计离港积压航班（判断逻辑）在3小时内无法消化完毕'
+                        )
+
+                case 5:
+                    # 累计备降航班架次
+                    data = self.get_data("执行_进港", outFlightTypeCode=TYPECODE)
+                    dival_count = data.loc[data["operationStatusCode"] == "DIVAL"
+                                           ].loc[data["operationStatusCode"] != "CNCL"
+                                                 ].__len__()
+                    if dival_count > 10 :
+                        alert_map[0].append(
+                            f'5.本场进港航班当日累计备降超过10班'
+                        )
+
+                    qb_data = self.get_data("执行_进港", flightTypeCode=['Q/B'])
+                    qb_count = 0
+                    if qb_data.__len__():
+                        qb_list = qb_data['sibt'].dt.hour.to_list()
+                        qb_count = max([qb_list.count(item) for item in set(qb_list)])
+
+                    if dival_count > 20 or qb_count > 10:
+                        alert_map[1].append(
+                            f'5.本场进港航班1小时内备降超过10班，或当日累计备降超过20班'
+                        )
+
+
+        alert = alert_map[max(alert)]
+        alerts["大面积航延"] = alert[0]
+        alerts["启动标准"] = "；".join(alert[1:])
+        return alerts
+
+        # 四地十场
+
+    def fourlocation_tenvenuse(self,days: int = 0) -> tuple[str, str, str, str, int, int]:
+
+        today, datetime_now = self.today(days), self.datetime_now()
+        start_time = datetime_now - timedelta(minutes= 1 )
+        end_time = datetime_now + timedelta(minutes= 1 )
+        data = self.get_data("航班", outFlightTypeCode=TYPECODE[:3])    # 筛选航班_性质为W/Z,C/B,L/W的航班
+        data = data.loc[data["outSobt"] >= start_time].loc[data["outSobt"] < end_time].copy()    # 
+        takeoffs = {}
+        # 广州、重庆、成都双流、成都天府、杭州、上海浦东、上海虹桥、深圳
+        for route in  ["CAN","CKG","CTU","TFU","HGH","PVG","SHA","SZX"]:
+            data_route = data[data['outRoute']==route]
+            if data_route.__len__():
+                departing = data_route.loc[data_route["outAtot"].isna() | (data_route["outAtot"] > datetime_now)]
+                takeoff_departing_delayed = departing.loc[
+                    departing["outStot"] < datetime_now
+                ].__len__()
+                data_route.drop(departing.index, inplace=True)
+                # 起飞正常性
+                try:
+                    takeoff_departed = data_route.loc[data_route["outAtot"] <= data_route["outStot"]].__len__()
+                    takeoff_delayed = data_route.__len__() - takeoff_departed
+                    takeoff = takeoff_departed / (
+                        takeoff_departed + takeoff_departing_delayed + takeoff_delayed
+                    )
+                    takeoff = (
+                        "100%" if takeoff == 1 else "{:.2f}%".format(round(takeoff * 100, 2))
+                    )
+                    takeoffs[route] = takeoff
+                except ZeroDivisionError:
+                    takeoffs[route] = ""
+            else:
+                takeoffs[route] = ""
+        return takeoffs
 
     def get_rates(self, days: int = 0) -> tuple[str, str, str, str, int, int]:
         today, datetime_now = self.today(days), self.datetime_now()
@@ -9820,28 +10114,24 @@ class AutoGui(tk.Tk):
 
 
 if __name__ == "__main__":
-    # hwnd = []
-    # # 查看weindows桌面有没有打开兴效能程序
-    # autogui = win32gui.EnumWindows(
-    #     lambda i, j: (
-    #         j.append(i)
-    #         if win32gui.GetClassName(i) == "TkTopLevel"
-    #         and TITLE in win32gui.GetWindowText(i)
-    #         else None
-    #     ),
-    #     hwnd,
-    # )
-    # # 如果存在兴效能程序，提示，兴效能已经在运行
-    # if hwnd:
-    #     win32gui.ShowWindow(hwnd[0], 5)
-    #     win32gui.BringWindowToTop(hwnd[0])
-    #     messagebox.showinfo("提示", f"{TITLE}已在运行中！")
-    # # 否则设置kwargs,并运行autogui
-    # else:
-    kwargs = {
-        "LOGIN": {
-            "shi.xx": "6fSxMa5M6ueMcWMylE1cDw==",
-            "chen.zp": "nt/F4qo5G5npIMHdqLRU3DTzkkW9gP/+KyoEzeDE2fs=",
+    hwnd = []
+    autogui = win32gui.EnumWindows(
+        lambda i, j: (
+            j.append(i)
+            if win32gui.GetClassName(i) == "TkTopLevel"
+            and TITLE in win32gui.GetWindowText(i)
+            else None
+        ),
+        hwnd,
+    )
+    if hwnd:
+        win32gui.ShowWindow(hwnd[0], 5)
+        win32gui.BringWindowToTop(hwnd[0])
+        messagebox.showinfo("提示", f"{TITLE}已在运行中！")
+    else:
+        kwargs = {
+            "LOGIN": {
+                "shi.xx": "4c/3qMk4KGLDHb43aI+BUQ==",
+            }
         }
-    }
-    AutoGui(**kwargs)
+        AutoGui(**kwargs)
