@@ -67,7 +67,7 @@ RENAMER_RUNNING = {
     "标题": "textField_lz6us3g2",
     "表格": "textField_lz6us3g4",
     "时间": "dateField_lz6us3g8",
-    "类型": "numberField_lzcc2qad"
+    "类型": "numberField_lzcc2qad",
 }
 RENAMER_RUNSUB = {
     "跑道运行态势": "textField_lz714eu1",
@@ -81,256 +81,66 @@ RENAMER_RUNSUB = {
 TABLE = {
     RENAMER_RUNSUB["跑道运行态势"]: {
         "meta": [
-            {
-                "aliasName": r"方向",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 14
-            },
-            {
-                "aliasName": r"上次起飞",
-                "dataType": "STRING",
-                "alias": "lt",
-                "weight": 21
-            },
-            {
-                "aliasName": r"起飞间隔",
-                "dataType": "STRING",
-                "alias": "sep",
-                "weight": 23
-            },
-            {
-                "aliasName": r"上次落地",
-                "dataType": "STRING",
-                "alias": "ll",
-                "weight": 21
-            },
-            {
-                "aliasName": r"预起/落",
-                "dataType": "STRING",
-                "alias": "e",
-                "weight": 20
-            }
+            {"aliasName": r"方向", "dataType": "STRING", "alias": "dir", "weight": 14},
+            {"aliasName": r"上次起飞", "dataType": "STRING", "alias": "lt", "weight": 21},
+            {"aliasName": r"起飞间隔", "dataType": "STRING", "alias": "sep", "weight": 23},
+            {"aliasName": r"上次落地", "dataType": "STRING", "alias": "ll", "weight": 21},
+            {"aliasName": r"预起/落", "dataType": "STRING", "alias": "e", "weight": 20},
         ]
     },
     RENAMER_RUNSUB["待离港航班态势"]: {
         "meta": [
-            {
-                "aliasName": r"方向",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 13
-            },
-            {
-                "aliasName": r"登机",
-                "dataType": "STRING",
-                "alias": "asbt",
-                "weight": 13
-            },
-            {
-                "aliasName": r"登结",
-                "dataType": "STRING",
-                "alias": "aebt",
-                "weight": 13
-            },
-            {
-                "aliasName": r"关舱",
-                "dataType": "STRING",
-                "alias": "acct",
-                "weight": 13
-            },
-            {
-                "aliasName": r"滑行",
-                "dataType": "STRING",
-                "alias": "push",
-                "weight": 13
-            },
-            {
-                "aliasName": r"滑回",
-                "dataType": "STRING",
-                "alias": "slibk",
-                "weight": 13
-            },
-            {
-                "aliasName": r"待/完冰",
-                "dataType": "STRING",
-                "alias": "icp",
-                "weight": 24
-            }
+            {"aliasName": r"方向", "dataType": "STRING", "alias": "dir", "weight": 13},
+            {"aliasName": r"登机", "dataType": "STRING", "alias": "asbt", "weight": 13},
+            {"aliasName": r"登结", "dataType": "STRING", "alias": "aebt", "weight": 13},
+            {"aliasName": r"关舱", "dataType": "STRING", "alias": "acct", "weight": 13},
+            {"aliasName": r"滑行", "dataType": "STRING", "alias": "push", "weight": 13},
+            {"aliasName": r"滑回", "dataType": "STRING", "alias": "slibk", "weight": 13},
+            {"aliasName": r"待/完冰", "dataType": "STRING", "alias": "icp", "weight": 24},
         ]
     },
     RENAMER_RUNSUB["实际/计划 进离港态势"]: {
         "meta": [
-            {
-                "aliasName": "方向",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 13
-            },
-            {
-                "aliasName": "前1小时",
-                "dataType": "STRING",
-                "alias": "dep",
-                "weight": 20
-            },
-            {
-                "aliasName": "半小时离",
-                "dataType": "STRING",
-                "alias": "hdep",
-                "weight": 22
-            },
-            {
-                "aliasName": "|",
-                "dataType": "STRING",
-                "alias": "i",
-                "weight": 2
-            },
-            {
-                "aliasName": "前1小时",
-                "dataType": "STRING",
-                "alias": "arr",
-                "weight": 20
-            },
-            {
-                "aliasName": "半小时进",
-                "dataType": "STRING",
-                "alias": "harr",
-                "weight": 22
-            }
+            {"aliasName": "方向", "dataType": "STRING", "alias": "dir", "weight": 13},
+            {"aliasName": "前1小时", "dataType": "STRING", "alias": "dep", "weight": 20},
+            {"aliasName": "半小时离", "dataType": "STRING", "alias": "hdep", "weight": 22},
+            {"aliasName": "|", "dataType": "STRING", "alias": "i", "weight": 2},
+            {"aliasName": "前1小时", "dataType": "STRING", "alias": "arr", "weight": 20},
+            {"aliasName": "半小时进", "dataType": "STRING", "alias": "harr", "weight": 22},
         ]
     },
     RENAMER_RUNSUB["机上等待态势"]: {
         "meta": [
-            {
-                "aliasName": "方向",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 14
-            },
-            {
-                "aliasName": "未起",
-                "dataType": "STRING",
-                "alias": "n",
-                "weight": 13
-            },
-            {
-                "aliasName": "已起",
-                "dataType": "STRING",
-                "alias": "a",
-                "weight": 13
-            },
-            {
-                "aliasName": "总计",
-                "dataType": "STRING",
-                "alias": "s",
-                "weight": 13
-            },
-            {
-                "aliasName": "平均时长",
-                "dataType": "STRING",
-                "alias": "mean",
-                "weight": 24
-            },
-            {
-                "aliasName": "最长时长",
-                "dataType": "STRING",
-                "alias": "max",
-                "weight": 24
-            }
+            {"aliasName": "方向", "dataType": "STRING", "alias": "dir", "weight": 14},
+            {"aliasName": "未起", "dataType": "STRING", "alias": "n", "weight": 13},
+            {"aliasName": "已起", "dataType": "STRING", "alias": "a", "weight": 13},
+            {"aliasName": "总计", "dataType": "STRING", "alias": "s", "weight": 13},
+            {"aliasName": "平均时长", "dataType": "STRING", "alias": "mean", "weight": 24},
+            {"aliasName": "最长时长", "dataType": "STRING", "alias": "max", "weight": 24},
         ]
     },
     RENAMER_RUNSUB["当日执行态势"]: {
         "meta": [
-            {
-                "aliasName": "架次",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 14
-            },
-            {
-                "aliasName": "计划",
-                "dataType": "STRING",
-                "alias": "t",
-                "weight": 14
-            },
-            {
-                "aliasName": "已执行",
-                "dataType": "STRING",
-                "alias": "a",
-                "weight": 18
-            },
-            {
-                "aliasName": "未执行",
-                "dataType": "STRING",
-                "alias": "s",
-                "weight": 18
-            },
-            {
-                "aliasName": "取消",
-                "dataType": "STRING",
-                "alias": "c",
-                "weight": 12
-            },
-            {
-                "aliasName": "昨日剩余",
-                "dataType": "STRING",
-                "alias": "n",
-                "weight": 21
-            }
+            {"aliasName": "架次", "dataType": "STRING", "alias": "dir", "weight": 14},
+            {"aliasName": "计划", "dataType": "STRING", "alias": "t", "weight": 14},
+            {"aliasName": "已执行", "dataType": "STRING", "alias": "a", "weight": 18},
+            {"aliasName": "未执行", "dataType": "STRING", "alias": "s", "weight": 18},
+            {"aliasName": "取消", "dataType": "STRING", "alias": "c", "weight": 12},
+            {"aliasName": "昨日剩余", "dataType": "STRING", "alias": "n", "weight": 21},
         ]
     },
     RENAMER_RUNSUB["截至当前执行态势"]: {
         "meta": [
-            {
-                "aliasName": "架次",
-                "dataType": "STRING",
-                "alias": "dir",
-                "weight": 18
-            },
-            {
-                "aliasName": "西离",
-                "dataType": "STRING",
-                "alias": "wd",
-                "weight": 13
-            },
-            {
-                "aliasName": "东离",
-                "dataType": "STRING",
-                "alias": "ed",
-                "weight": 13
-            },
-            {
-                "aliasName": "离港",
-                "dataType": "STRING",
-                "alias": "d",
-                "weight": 13
-            },
-            {
-                "aliasName": "|",
-                "dataType": "STRING",
-                "alias": "i",
-                "weight": 2
-            },
-            {
-                "aliasName": "西进",
-                "dataType": "STRING",
-                "alias": "wa",
-                "weight": 13
-            },
-            {
-                "aliasName": "东进",
-                "dataType": "STRING",
-                "alias": "ea",
-                "weight": 13
-            },
-            {
-                "aliasName": "进港",
-                "dataType": "STRING",
-                "alias": "a",
-                "weight": 13
-            }
+            {"aliasName": "架次", "dataType": "STRING", "alias": "dir", "weight": 18},
+            {"aliasName": "西离", "dataType": "STRING", "alias": "wd", "weight": 13},
+            {"aliasName": "东离", "dataType": "STRING", "alias": "ed", "weight": 13},
+            {"aliasName": "离港", "dataType": "STRING", "alias": "d", "weight": 13},
+            {"aliasName": "|", "dataType": "STRING", "alias": "i", "weight": 2},
+            {"aliasName": "西进", "dataType": "STRING", "alias": "wa", "weight": 13},
+            {"aliasName": "东进", "dataType": "STRING", "alias": "ea", "weight": 13},
+            {"aliasName": "进港", "dataType": "STRING", "alias": "a", "weight": 13},
         ]
-    }
+    },
 }
 
 
@@ -359,9 +169,7 @@ def retry(retries: int = 3, delay: float = 1):
                         update_log(f'"{func.__name__}()" 执行失败，已重试{retries}次')
                         break
                     else:
-                        update_log(
-                            f"{repr(e)}，{delay}秒后第[{i+1}/{retries}]次重试..."
-                        )
+                        update_log(f"{repr(e)}，{delay}秒后第[{i+1}/{retries}]次重试...")
                         sleep(delay)
 
         return wrapper
@@ -399,9 +207,7 @@ def clear_log(days: int = 7):
 
 def upload_img(path: str):
     # return '@lALPDgCwd_scHXbNArTNBKE'
-    url = (
-        f"https://oapi.dingtalk.com/media/upload?access_token={get_token()}&type=image"
-    )
+    url = f"https://oapi.dingtalk.com/media/upload?access_token={get_token()}&type=image"
     retries, returns = 5, ""
     while retries:
         try:
@@ -426,9 +232,7 @@ def upload_img(path: str):
 def request_token() -> tuple[str, int]:
     client = dingtalkoauth2_1_0Client(CONFIG)
 
-    get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(
-        app_key=KEY, app_secret=SECRET
-    )
+    get_access_token_request = dingtalkoauth_2__1__0_models.GetAccessTokenRequest(app_key=KEY, app_secret=SECRET)
     try:
         body = client.get_access_token(get_access_token_request).body
         return body.access_token, body.expire_in
@@ -475,14 +279,12 @@ def update(data: dict, fiid: str, name: str = ""):
     update_form_data_headers = dingtalkyida__1__0_models.UpdateFormDataHeaders()
     update_form_data_headers.x_acs_dingtalk_access_token = get_token()
     update_form_data_request = dingtalkyida__1__0_models.UpdateFormDataRequest(
-        system_token=SYSTOKEN,
-        app_type=APP,
-        form_instance_id=fiid,
-        user_id=UID,
-        update_form_data_json=dumps(data)
+        system_token=SYSTOKEN, app_type=APP, form_instance_id=fiid, user_id=UID, update_form_data_json=dumps(data)
     )
     try:
-        client.update_form_data_with_options(update_form_data_request, update_form_data_headers, util_models.RuntimeOptions())
+        client.update_form_data_with_options(
+            update_form_data_request, update_form_data_headers, util_models.RuntimeOptions()
+        )
     except Exception as err:
         raise Exception(f"更新{name}数据错误（{err.code}）： {err.message}")
 
@@ -492,9 +294,7 @@ def search(condition: dict | list[dict], page_number: int, form: str, name: str 
     search_form_data_second_generation_no_table_field_headers = (
         dingtalkyida__1__0_models.SearchFormDataSecondGenerationNoTableFieldHeaders()
     )
-    search_form_data_second_generation_no_table_field_headers.x_acs_dingtalk_access_token = (
-        get_token()
-    )
+    search_form_data_second_generation_no_table_field_headers.x_acs_dingtalk_access_token = get_token()
     search_form_data_second_generation_no_table_field_request = (
         dingtalkyida__1__0_models.SearchFormDataSecondGenerationNoTableFieldRequest(
             system_token=SYSTOKEN,
@@ -579,13 +379,15 @@ def ding_push(__str: str, __type: str):
 def running_push(__dict: dict, __timestamp: int):
     page_number = 1
     fiid = []
-    condition = [{
-        "key": "dateField_lz714eu6",
-        "value": int(1000 * time()),
-        "type": "DOUBLE",
-        "operator": "gt",
-        "componentName": "DateField",
-    }]
+    condition = [
+        {
+            "key": "dateField_lz714eu6",
+            "value": int(1000 * time()),
+            "type": "DOUBLE",
+            "operator": "gt",
+            "componentName": "DateField",
+        }
+    ]
 
     while True:
         response = search(condition, page_number, RUNSUB, "运行态势订阅")
@@ -609,9 +411,7 @@ def running_push(__dict: dict, __timestamp: int):
 
 def update_code(_t: float):
     t1, t2 = _t % 1800000, _t % 3600000
-    return (
-        2 if t2 < 180000 or t2 >= 3480000 else 1 if t1 < 180000 or t1 >= 1680000 else 0
-    )
+    return 2 if t2 < 180000 or t2 >= 3480000 else 1 if t1 < 180000 or t1 >= 1680000 else 0
 
 
 if __name__ == "__main__":
@@ -726,7 +526,9 @@ if __name__ == "__main__":
                                     v["描述"],
                                 )
                             )
-                        warnlist.append(dumps(dict((RENAMER_WARN[k], v) for k, v in v.items() if v and k in RENAMER_WARN)))
+                        warnlist.append(
+                            dumps(dict((RENAMER_WARN[k], v) for k, v in v.items() if v and k in RENAMER_WARN))
+                        )
                     sleep(1)
                     upload(warnlist, WARN, "告警")
                     update_log("告警同步成功")
@@ -750,7 +552,13 @@ if __name__ == "__main__":
                 updated_duty = os.path.getmtime()
                 update_log("值班同步尝试5次均失败，跳过")
             elif duty_mtime != updated_duty:
-                upload([dumps(i) for i in json_duty], DUTY, "值班", "APP_HZ4NPKJBV8VV04401NO7", "3L966J711A24UKS1BGQVOB579DD32OF9BK98LC2")
+                upload(
+                    [dumps(i) for i in json_duty],
+                    DUTY,
+                    "值班",
+                    "APP_HZ4NPKJBV8VV04401NO7",
+                    "3L966J711A24UKS1BGQVOB579DD32OF9BK98LC2",
+                )
                 updated_duty = duty_mtime
                 update_log("值班同步成功")
             retries_duty = 5

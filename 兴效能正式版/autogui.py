@@ -38,16 +38,20 @@ from globals import *
 VERSION = "3.4.4"
 TITLE = "兴效能"
 IGNORE = "ignore"
-CACHE = os.getenv("LOCALAPPDATA")   # C:\\Users\\admin\\AppData\\Local
-CACHE = rf"{CACHE if CACHE else '.'}\pkxee" # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\pkxee'
-HISTORY = CACHE + r"\history_{}.{}" # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\history_{}.{}'
-MONI = rf"{CACHE}\moni.xlsx"    # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\moni.xlsx'
-LOG = rf"{CACHE}\pkxee.log"     # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\pkxee.log'
-SETTINGS = rf"{CACHE}\settings.json"    # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\settings.json'
+CACHE = os.getenv("LOCALAPPDATA")  # C:\\Users\\admin\\AppData\\Local
+CACHE = rf"{CACHE if CACHE else '.'}\pkxee"  # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\pkxee'
+HISTORY = (
+    CACHE + r"\history_{}.{}"
+)  # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\history_{}.{}'
+MONI = rf"{CACHE}\moni.xlsx"  # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\moni.xlsx'
+LOG = rf"{CACHE}\pkxee.log"  # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\pkxee.log'
+SETTINGS = rf"{CACHE}\settings.json"  # 'C:\\Users\\admin\\AppData\\Local\\pkxee\\settings.json'
 
 inside = lambda min_, value, max_: max(min_, min(max_, value))
 timestamp_to_delay = lambda x: (
-    f"提前{int(-x/60)}分钟" if x < 0 else f"延误{int(x/60)}分钟" if x > 0 else "准点"
+    f"提前{int(-x / 60)}分钟"
+    if x < 0
+    else f"延误{int(x / 60)}分钟" if x > 0 else "准点"
 )
 timedelta_to_delay = lambda x: timestamp_to_delay(x.total_seconds())
 isnumeric = lambda x: str(x).count(".") <= 1 and str(x).replace(".", "").isnumeric()
@@ -991,7 +995,7 @@ class AutoGui(tk.Tk):
             config.resizable(False, False)
             config.bind("<Escape>", lambda *x: config.destroy())
             config.geometry(
-                f"+{self.winfo_rootx()+self.winfo_width()//10}+{self.winfo_rooty()+self.winfo_height()//10}"
+                f"+{self.winfo_rootx() + self.winfo_width() // 10}+{self.winfo_rooty() + self.winfo_height() // 10}"
             )
             var = dict()
             if __item == "CTOT":
@@ -1380,7 +1384,7 @@ class AutoGui(tk.Tk):
             about.bind("<Escape>", lambda *x: about.destroy())
             about.bind("<Return>", new_var)
             about.geometry(
-                f"+{self.winfo_rootx()+self.winfo_width()//3}+{self.winfo_rooty()+self.winfo_height()//5}"
+                f"+{self.winfo_rootx() + self.winfo_width() // 3}+{self.winfo_rooty() + self.winfo_height() // 5}"
             )
             about.wait_window()
             del self.author
@@ -1411,7 +1415,7 @@ class AutoGui(tk.Tk):
             convert.resizable(False, False)
             convert.bind("<Escape>", lambda *x: convert.destroy())
             convert.geometry(
-                f"+{self.winfo_rootx()+self.winfo_width()//10}+{self.winfo_rooty()+self.winfo_height()//10}"
+                f"+{self.winfo_rootx() + self.winfo_width() // 10}+{self.winfo_rooty() + self.winfo_height() // 10}"
             )
             if self.winfo_viewable():
                 convert.transient(self)
@@ -2301,7 +2305,7 @@ class AutoGui(tk.Tk):
         self.bind("<Configure>", resize_action)
         w, h = 800, 450
         self.geometry(
-            f"{w}x{h}+{(self.winfo_screenwidth()-w)//2}+{(self.winfo_screenheight()-h)//2}"
+            f"{w}x{h}+{(self.winfo_screenwidth() - w) // 2}+{(self.winfo_screenheight() - h) // 2}"
         )
         self.minsize(305, 300)
         self.report_callback_exception = self.handle_exception
@@ -2501,7 +2505,7 @@ class AutoGui(tk.Tk):
         editor.title(title)
         editor.resizable(False, False)
         editor.geometry(
-            f"+{master.winfo_rootx()+master.winfo_width()//4}+{master.winfo_rooty()+master.winfo_height()//4}"
+            f"+{master.winfo_rootx() + master.winfo_width() // 4}+{master.winfo_rooty() + master.winfo_height() // 4}"
         )
         if master.winfo_viewable():
             editor.transient(master)
@@ -2526,7 +2530,7 @@ class AutoGui(tk.Tk):
             editing.title(f"{col_to_header[col]}{'新建' if new else '编辑'}")
             editing.resizable(False, False)
             editing.geometry(
-                f"+{editor.winfo_rootx()+editor.winfo_width()//6}+{editor.winfo_rooty()+editor.winfo_height()//6}"
+                f"+{editor.winfo_rootx() + editor.winfo_width() // 6}+{editor.winfo_rooty() + editor.winfo_height() // 6}"
             )
             if editor.winfo_viewable():
                 editing.transient(editor)
@@ -2568,8 +2572,9 @@ class AutoGui(tk.Tk):
 
             def copy():
                 try:
-                    entry.clipboard_clear(), entry.clipboard_append(
-                        entry.get(tk.SEL_FIRST, tk.SEL_LAST)
+                    (
+                        entry.clipboard_clear(),
+                        entry.clipboard_append(entry.get(tk.SEL_FIRST, tk.SEL_LAST)),
                     )
                 except Exception:
                     ...
@@ -2841,7 +2846,7 @@ class AutoGui(tk.Tk):
         )
         selector = tk.Toplevel(master, name="datetimeselector")
         selector.geometry(
-            f"198x60+{master.winfo_rootx()+master.winfo_width()//3}+{master.winfo_rooty()+master.winfo_height()//3}"
+            f"198x60+{master.winfo_rootx() + master.winfo_width() // 3}+{master.winfo_rooty() + master.winfo_height() // 3}"
         )
         selector.attributes("-topmost", self.TOPMOST.get())
         selector.title(title)
@@ -2962,7 +2967,7 @@ class AutoGui(tk.Tk):
         box = tk.Toplevel(master if master else self, name=title)
         box.title(title)
         box.geometry(
-            f"+{master.winfo_rootx()+master.winfo_width()//3}+{master.winfo_rooty()+master.winfo_height()//8}"
+            f"+{master.winfo_rootx() + master.winfo_width() // 3}+{master.winfo_rooty() + master.winfo_height() // 8}"
         )
         if master.winfo_viewable():
             box.transient(master)
@@ -3027,7 +3032,7 @@ class AutoGui(tk.Tk):
         export = tk.Toplevel(master, name=title)
         export.attributes("-topmost", self.TOPMOST.get())
         export.geometry(
-            f"+{self.winfo_rootx()+self.winfo_width()//3}+{self.winfo_rooty()+self.winfo_height()//3}"
+            f"+{self.winfo_rootx() + self.winfo_width() // 3}+{self.winfo_rooty() + self.winfo_height() // 3}"
         )
         export.title(title)
         export.resizable(False, False)
@@ -3054,8 +3059,9 @@ class AutoGui(tk.Tk):
                 return False
 
         def confirm():
-            start, end = datetime.fromisoformat(start_.get()), datetime.fromisoformat(
-                end_.get()
+            start, end = (
+                datetime.fromisoformat(start_.get()),
+                datetime.fromisoformat(end_.get()),
             )
             if start_exclude.get():
                 start -= timedelta(minutes=1)
@@ -3430,9 +3436,13 @@ class AutoGui(tk.Tk):
         return seq
 
     def get_flight_data(
-        self, start: datetime, end: datetime, progress: int = 40, moni: bool = True, **kwargs
+        self,
+        start: datetime,
+        end: datetime,
+        progress: int = 40,
+        moni: bool = True,
+        **kwargs,
     ) -> dict[str, DataFrame]:
-
         payload = self.FLIGHT_PAYLOAD.copy()
         payload["limit"] = kwargs.pop("limit", self.UPDATE_LIMIT.get())
         payload.update(kwargs)
@@ -3730,7 +3740,7 @@ class AutoGui(tk.Tk):
                         datetime_now + end,
                         departureMode="outS",
                         limit=limit,
-                        moni=self.msg_para[0].get() or self.msg_para[1].get()
+                        moni=self.msg_para[0].get() or self.msg_para[1].get(),
                     )
                 )
                 futures.append(
@@ -3778,7 +3788,11 @@ class AutoGui(tk.Tk):
             futures.append(executor.submit(self.get_flight_info, *args))
             futures.append(
                 executor.submit(
-                    self.get_flight_data, *args, departureMode="outS", limit=limit, moni=False
+                    self.get_flight_data,
+                    *args,
+                    departureMode="outS",
+                    limit=limit,
+                    moni=False,
                 )
             )
             futures.append(executor.submit(self.get_delay_data, *args, limit=limit))
@@ -4447,7 +4461,7 @@ class AutoGui(tk.Tk):
                 else:
                     self.log.tag_add(tag, "1.10", f"{1 + line}.{last}")
                 if tag == "text" and "成功" in __str:
-                    self.log.tag_add("bold", "1.10", f"1.{10 + __str.find('成功')+2}")
+                    self.log.tag_add("bold", "1.10", f"1.{10 + __str.find('成功') + 2}")
             if suffix:
                 self.log.tag_add(
                     "suffix", f"{1 + line}.{last}", f"{1 + line}.{len(suffix) + last}"
@@ -4629,9 +4643,12 @@ class AutoGui(tk.Tk):
                 )
                 for i in ("CTOT", "COBT")
             )
-            title, filename = "导出CTOT和COBT历史记录表格", self.FILENAME.get(
-                "CTOT和COBT历史记录"
-            ).format(*datetime.now().timetuple())
+            title, filename = (
+                "导出CTOT和COBT历史记录表格",
+                self.FILENAME.get("CTOT和COBT历史记录").format(
+                    *datetime.now().timetuple()
+                ),
+            )
             file = (
                 f"{self.EXPORT_PATH.get()}/{filename}"
                 if self.EXPORT_PATH_.get()
@@ -4925,8 +4942,9 @@ class AutoGui(tk.Tk):
                 )
                 pivot["总计"] = ""
 
-                title, filename = "导出数据透视", self.FILENAME.get("数据透视").format(
-                    *datetime.now().timetuple()
+                title, filename = (
+                    "导出数据透视",
+                    self.FILENAME.get("数据透视").format(*datetime.now().timetuple()),
                 )
                 file = (
                     f"{self.EXPORT_PATH.get()}/{filename}"
@@ -4964,7 +4982,7 @@ class AutoGui(tk.Tk):
         box.attributes("-topmost", self.TOPMOST.get())
         box.title("设置数据透视")
         box.geometry(
-            f"+{self.winfo_rootx()+self.winfo_width()//5}+{self.winfo_rooty()+self.winfo_height()//5}"
+            f"+{self.winfo_rootx() + self.winfo_width() // 5}+{self.winfo_rooty() + self.winfo_height() // 5}"
         )
 
         op = {"+": add, "-": sub, "=": eq, "≠": ne, "<": lt, "≤": le, ">": gt, "≥": ge}
@@ -5028,7 +5046,7 @@ class AutoGui(tk.Tk):
             if box.winfo_viewable():
                 editing.transient(box)
             editing.resizable(False, False)
-            editing.geometry(f"+{box.winfo_rootx()+100}+{box.winfo_rooty()+50}")
+            editing.geometry(f"+{box.winfo_rootx() + 100}+{box.winfo_rooty() + 50}")
 
             scrollbar_e = ttk.Scrollbar(editing)
             entry = tk.Text(
@@ -5054,8 +5072,9 @@ class AutoGui(tk.Tk):
 
             def copy():
                 try:
-                    entry.clipboard_clear(), entry.clipboard_append(
-                        entry.get(tk.SEL_FIRST, tk.SEL_LAST)
+                    (
+                        entry.clipboard_clear(),
+                        entry.clipboard_append(entry.get(tk.SEL_FIRST, tk.SEL_LAST)),
                     )
                 except Exception:
                     ...
@@ -5434,7 +5453,7 @@ class AutoGui(tk.Tk):
 
             while count:
                 for col in range(1, ws.max_column + 1):
-                    ws[f"{get_column_letter(col)}{count+1}"].fill = PatternFill(
+                    ws[f"{get_column_letter(col)}{count + 1}"].fill = PatternFill(
                         "solid", config["延误"][2]
                     )
                 count -= 1
@@ -5514,7 +5533,7 @@ class AutoGui(tk.Tk):
                     ),
                 )
 
-            merge_range = f"A{ws.max_row+1}:O{ws.max_row+1}"
+            merge_range = f"A{ws.max_row + 1}:O{ws.max_row + 1}"
             ws.merge_cells(merge_range)
             cell = ws[merge_range[: merge_range.find(":")]]
             cell.value = ws["A1"].value
@@ -5526,7 +5545,7 @@ class AutoGui(tk.Tk):
                 ws.row_dimensions[row].height = 36
 
         ws = wb.sheets["总表"]
-        merge_range = f"A{ws.max_row+1}:O{ws.max_row+1}"
+        merge_range = f"A{ws.max_row + 1}:O{ws.max_row + 1}"
         ws.merge_cells(merge_range)
         cell = ws[merge_range[: merge_range.find(":")]]
         cell.value = res
@@ -5719,7 +5738,7 @@ class AutoGui(tk.Tk):
                                     _data["ctotOffset"] <= timedelta(hours=i)
                                 ].index
                                 if __data.size:
-                                    msg += f"推点{i-1}-{i}小时{__data.size}架次，"
+                                    msg += f"推点{i - 1}-{i}小时{__data.size}架次，"
                                     _data.drop(__data, inplace=True)
                             msg = msg[:-1] + "】。"
                         else:
@@ -5788,7 +5807,7 @@ class AutoGui(tk.Tk):
                         + filename.replace(".xlsx", ".png")
                     )
                     img = self.save_excel_img(
-                        file, img, "总表", f"A1:O{len(output['总表'][0])+1}"
+                        file, img, "总表", f"A1:O{len(output['总表'][0]) + 1}"
                     )
                     if file[0] == ".":
                         file = "程序所在文件夹" + file[1:]
@@ -5905,7 +5924,7 @@ class AutoGui(tk.Tk):
             if config["M"][2] and "未" not in str(cell.value):
                 cell.font = self.font(bold=True, size=10)
 
-        merge_range = f"A{ws.max_row+1}:O{ws.max_row+1}"
+        merge_range = f"A{ws.max_row + 1}:O{ws.max_row + 1}"
         ws.merge_cells(merge_range)
         cell = ws[merge_range[: merge_range.find(":")]]
         cell.value = msg
@@ -5946,7 +5965,6 @@ class AutoGui(tk.Tk):
 
             msg = "截至{}:{:02}，".format(datetime_now.hour, datetime_now.minute)
             if data.__len__():
-
                 renamer = {
                     "outFlightNo": "航班号",
                     "outRouteCn": "下站",
@@ -6017,7 +6035,7 @@ class AutoGui(tk.Tk):
                     i += 1
                     __data = _data.loc[_data["delayed"] <= timedelta(hours=i)].index
                     if __data.size:
-                        msg += f"，延误{i-1}-{i}小时{__data.size}架次"
+                        msg += f"，延误{i - 1}-{i}小时{__data.size}架次"
                         _data.drop(__data, inplace=True)
                 msg += "。"
 
@@ -6057,7 +6075,7 @@ class AutoGui(tk.Tk):
                         + filename.replace(".xlsx", ".png")
                     )
                     img = self.save_excel_img(
-                        file, img, "延误未起飞", f"A1:O{len(data)+1}"
+                        file, img, "延误未起飞", f"A1:O{len(data) + 1}"
                     )
                     if file[0] == ".":
                         file = "程序所在文件夹" + file[1:]
@@ -6094,8 +6112,9 @@ class AutoGui(tk.Tk):
         try:
             delay = "outLastTot"  # self.DELAY.get()
             yesterday = self.yesterday.get()
-            datetime_now, today = self.datetime_now(), self.today(
-                -1 if yesterday else 0
+            datetime_now, today = (
+                self.datetime_now(),
+                self.today(-1 if yesterday else 0),
             )
             tommorow = today + timedelta(1)
             msg = "截至{}:{:02}，".format(datetime_now.hour, datetime_now.minute)
@@ -6175,7 +6194,8 @@ class AutoGui(tk.Tk):
                 msg += (
                     "{}架次未执行（".format(data.__len__())
                     + "，".join(
-                        f"{i}{len(data.loc[data['status']==i])}架次" for i in status_map
+                        f"{i}{len(data.loc[data['status'] == i])}架次"
+                        for i in status_map
                     )
                     + "）；"
                 )
@@ -6449,14 +6469,23 @@ class AutoGui(tk.Tk):
                 datetime_now - data.loc[data["aibt"].notna(), "aibt"]
             )
             for k in "进港滑行{}未轮挡", "进港轮挡{}后未下客", "进港轮挡半小时未下客":
-                if k == "进港滑行{}未轮挡" :
-                    data['pr'] = data['portNoLd']+"_"+data['defaultRunwayCode']
-                    data['pr'] = data['pr'].apply(lambda x:ICESNOW.get(str(x)))
-                    data['pr'] = data['pr'].replace(np.NAN,9999999)
-                    data['pr'] = pd.to_timedelta(data['pr'],unit='m')
+                if k == "进港滑行{}未轮挡":
+                    data["pr"] = data["portNoLd"] + "_" + data["defaultRunwayCode"]
+                    data["pr"] = data["pr"].apply(lambda x: ICESNOW.get(str(x)))
+                    data["pr"] = data["pr"].replace(np.NAN, 9999999)
+                    data["pr"] = pd.to_timedelta(data["pr"], unit="m")
                     for v in data.loc[
-                        data[k] >= data['pr'],
-                        ["flightNo", "sibt", "portNoLd", "grdAgent", k,"aldt","runwayTypeCode","pr"],
+                        data[k] >= data["pr"],
+                        [
+                            "flightNo",
+                            "sibt",
+                            "portNoLd",
+                            "grdAgent",
+                            k,
+                            "aldt",
+                            "runwayTypeCode",
+                            "pr",
+                        ],
                     ].values:
                         if (*v[:2], k.replace("{}", "")) not in self.MONI.index:
                             moni.loc[(*v[:2], k.replace("{}", ""))] = [
@@ -6464,8 +6493,10 @@ class AutoGui(tk.Tk):
                                 "",
                                 v[2],
                                 v[3],
-                                f'标准：{np.int64(v[7].total_seconds()) // 60}分钟，ATA：{v[5].strftime("%H%M")}，{f"跑道：{v[6]}，" if v[6] else "" }'+ \
-                                    k.format(f"{np.int64(v[4].total_seconds()) // 60}分钟"),
+                                f"标准：{np.int64(v[7].total_seconds()) // 60}分钟，ATA：{v[5].strftime('%H%M')}，{f'跑道：{v[6]}，' if v[6] else ''}"
+                                + k.format(
+                                    f"{np.int64(v[4].total_seconds()) // 60}分钟"
+                                ),
                             ]
                 else:
                     for v in data.loc[
@@ -6505,7 +6536,11 @@ class AutoGui(tk.Tk):
                             "",
                             v[2],
                             v[3],
-                            k.format(f"{np.int64(v[4].total_seconds()) // 60}分钟".replace("首件", "末件")),
+                            k.format(
+                                f"{np.int64(v[4].total_seconds()) // 60}分钟".replace(
+                                    "首件", "末件"
+                                )
+                            ),
                         ]
 
             # 离港监控
@@ -6584,18 +6619,18 @@ class AutoGui(tk.Tk):
 
             k = "同航点同时刻相邻登机门"
             data_copy = data.copy()
-            for i in data_copy.loc[
-                data_copy["asbt"].isna()
-            ].index:
-                data_copy[k] = (data_copy["sobt"] - data_copy.loc[i, "sobt"]).apply(lambda x : x.total_seconds()/60)
+            for i in data_copy.loc[data_copy["asbt"].isna()].index:
+                data_copy[k] = (data_copy["sobt"] - data_copy.loc[i, "sobt"]).apply(
+                    lambda x: x.total_seconds() / 60
+                )
                 data_ = data_copy.loc[
                     (data_copy["routeFst"] == data_copy.loc[i, "routeFst"])
-                    &data_copy["gateNo"].map(
+                    & data_copy["gateNo"].map(
                         lambda x: str(x)
                         in self.NEARGATE.get(data_copy.loc[i, "gateNo"], ""),
                         IGNORE,
                     )
-                    &(abs(data_copy[k]) < 40)
+                    & (abs(data_copy[k]) < 40)
                     & (data_copy.index != i)
                 ]
                 v = (
@@ -6613,7 +6648,9 @@ class AutoGui(tk.Tk):
                         "",
                         data_copy.loc[i, "portNoTo"],
                         "",
-                        "与同航点航班{}分配至相邻机位且起飞时间接近，请重点关注".format("、".join(data_["flightNo"].values)),
+                        "与同航点航班{}分配至相邻机位且起飞时间接近，请重点关注".format(
+                            "、".join(data_["flightNo"].values)
+                        ),
                     ]
                     data_copy = data_copy[data_copy.index != i]
 
@@ -6760,8 +6797,9 @@ class AutoGui(tk.Tk):
 
         # 运行态势监控
         if "sync" in self.RUNNING:
-            hour, hhour = datetime_now - timedelta(hours=1), datetime_now - timedelta(
-                minutes=30
+            hour, hhour = (
+                datetime_now - timedelta(hours=1),
+                datetime_now - timedelta(minutes=30),
             )
             dirs = ["东", "西"]
 
@@ -7176,7 +7214,7 @@ class AutoGui(tk.Tk):
 
         if alerts["预警条件"] >= 10:
             alert_map[0].append(
-                f'离港航班CTOT≥STD+1.5小时达10架次及以上（当前{alerts["预警条件"]}架次）'
+                f"离港航班CTOT≥STD+1.5小时达10架次及以上（当前{alerts['预警条件']}架次）"
             )
             alert.append(0)
 
@@ -7184,7 +7222,7 @@ class AutoGui(tk.Tk):
             for i, j in (50, 3), (40, 2), (25, 1):
                 if alerts["响应条件一"] >= i:
                     alert_map[j].append(
-                        f'离港航班不正常时长超1小时以上且未起飞客运航班达{i}架次（按起飞延误，当前{alerts["响应条件一"]}架次）'
+                        f"离港航班不正常时长超1小时以上且未起飞客运航班达{i}架次（按起飞延误，当前{alerts['响应条件一']}架次）"
                     )
                     alert.append(j)
                     break
@@ -7193,7 +7231,7 @@ class AutoGui(tk.Tk):
             for i, j in (30, 3), (25, 2), (15, 1):
                 if alerts["响应条件二"] >= i:
                     alert_map[j].append(
-                        f'未来2小时内出港客运航班航司决策临时取消达{i}架次（当前{alerts["响应条件二"]}架次）'
+                        f"未来2小时内出港客运航班航司决策临时取消达{i}架次（当前{alerts['响应条件二']}架次）"
                     )
                     alert.append(j)
                     break
@@ -7202,7 +7240,7 @@ class AutoGui(tk.Tk):
                 for i, j in (75, 3), (70, 2), (60, 1):
                     if alerts["响应条件三"] >= i:
                         alert_map[j].append(
-                            f'22时至次日6时任一小时进港航班和离港取消航班合计达{i}架次（当前{alerts["响应条件三"]}架次）'
+                            f"22时至次日6时任一小时进港航班和离港取消航班合计达{i}架次（当前{alerts['响应条件三']}架次）"
                         )
                         alert.append(j)
                         break
@@ -7224,8 +7262,14 @@ class AutoGui(tk.Tk):
         alert = [-1]
         alert_map = {
             -1: ["无", ""],
-            0: ["视情况启动调时","【视情况启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无）：启动条件（"],
-            1: ["立即启动调时","【立即启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无/视情况启动调时）：启动条件（"],
+            0: [
+                "视情况启动调时",
+                "【视情况启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无）：启动条件（",
+            ],
+            1: [
+                "立即启动调时",
+                "【立即启动调时】兴效能已自动检测到满足立即启动调时标准（先前为无/视情况启动调时）：启动条件（",
+            ],
         }
         alerts = dict()
 
@@ -7287,129 +7331,194 @@ class AutoGui(tk.Tk):
                 .loc[data["eldt"] < datetime_now + timedelta(hours=1)]
                 .__len__()
             )
-        for i in range(1,6):
+        for i in range(1, 6):
             match i:
                 case 1:
                     if alerts["预警条件"] >= 10:
-                        alert_map[0].append(
-                            '1. 大兴机场启动大面积航班延误预警'
-                            )
+                        alert_map[0].append("1. 大兴机场启动大面积航班延误预警")
 
-                    if (alerts['响应条件一'] >= 50 ) | (alerts["响应条件二"] >= 30) |  \
-                        ((datetime_now.hour >= 22 or datetime_now.hour < 6) & alerts["响应条件三"] >= 75):
-                        alert_map[1].append(
-                            "1. 大兴机场启动大面积航班延误红色响应"
-                            )
+                    if (
+                        (alerts["响应条件一"] >= 50)
+                        | (alerts["响应条件二"] >= 30)
+                        | (
+                            (datetime_now.hour >= 22 or datetime_now.hour < 6)
+                            & alerts["响应条件三"]
+                            >= 75
+                        )
+                    ):
+                        alert_map[1].append("1. 大兴机场启动大面积航班延误红色响应")
                 case 2:
                     try:
-                        if (datetime_now.hour>=7 or datetime_now.hour<24):
+                        if datetime_now.hour >= 7 or datetime_now.hour < 24:
+
                             def neizhi(*args):
                                 data = self.get_data("航班", outFlightTypeCode=TYPECODE)
 
                                 # 进港的情况
-                                inaldt_data = (
-                                    data.loc[(data[args[0]]-datetime.now()) < timedelta(minutes=0)]
-                                        .sort_values(by=args[0],ascending=False)
-                                )
+                                inaldt_data = data.loc[
+                                    (data[args[0]] - datetime.now())
+                                    < timedelta(minutes=0)
+                                ].sort_values(by=args[0], ascending=False)
                                 inaldt_time = inaldt_data.iloc[0][args[0]]
 
-                                inaldt_now_sldt = (
-                                    data.loc[data[args[2]]>inaldt_time].__len__() 
-                                )
-                                inaldt_now_stot = (
-                                    data.loc[data[args[3]]>inaldt_time].__len__() 
-                                )
+                                inaldt_now_sldt = data.loc[
+                                    data[args[2]] > inaldt_time
+                                ].__len__()
+                                inaldt_now_stot = data.loc[
+                                    data[args[3]] > inaldt_time
+                                ].__len__()
 
                                 # 出港的情况
-                                outatot_data = (
-                                    data.loc[(data[args[1]]-datetime.now()) < timedelta(minutes=0)]
-                                        .sort_values(by=args[1],ascending=False)
-                                )
+                                outatot_data = data.loc[
+                                    (data[args[1]] - datetime.now())
+                                    < timedelta(minutes=0)
+                                ].sort_values(by=args[1], ascending=False)
                                 outatot_time = outatot_data.iloc[0][args[1]]
 
-                                outatot_now_sldt = (
-                                    data.loc[data[args[2]]>outatot_time].__len__() 
-                                )
-                                outatot_now_stot = (
-                                    data.loc[data[args[3]]>outatot_time].__len__() 
-                                )
-                                return [inaldt_time,inaldt_now_sldt,inaldt_now_stot,outatot_time,outatot_now_sldt,outatot_now_stot]
+                                outatot_now_sldt = data.loc[
+                                    data[args[2]] > outatot_time
+                                ].__len__()
+                                outatot_now_stot = data.loc[
+                                    data[args[3]] > outatot_time
+                                ].__len__()
+                                return [
+                                    inaldt_time,
+                                    inaldt_now_sldt,
+                                    inaldt_now_stot,
+                                    outatot_time,
+                                    outatot_now_sldt,
+                                    outatot_now_stot,
+                                ]
 
-                            re_list = neizhi(*["inAldt","outAtot","inSldt","outStot"])
+                            re_list = neizhi(
+                                *["inAldt", "outAtot", "inSldt", "outStot"]
+                            )
 
-                            if (((re_list[0] < datetime_now - timedelta(minutes=20))&((re_list[1] > 9) |( re_list[1]+re_list[2] > 12))) | \
-                                ((re_list[3] < datetime_now - timedelta(minutes=20))&((re_list[5] > 9) |( re_list[4]+re_list[5] > 12))) 
-                                ):
+                            if (
+                                (re_list[0] < datetime_now - timedelta(minutes=20))
+                                & ((re_list[1] > 9) | (re_list[1] + re_list[2] > 12))
+                            ) | (
+                                (re_list[3] < datetime_now - timedelta(minutes=20))
+                                & ((re_list[5] > 9) | (re_list[4] + re_list[5] > 12))
+                            ):
                                 alert_map[0].append(
-                                    f'2.本场预计或目前已停止起飞或落地20分钟以上，且直接影响航班总量大于其高峰小时容量的20%;'
+                                    f"2.本场预计或目前已停止起飞或落地20分钟以上，且直接影响航班总量大于其高峰小时容量的20%;"
                                 )
 
-                            if (((re_list[0] < datetime_now - timedelta(minutes=60))&((re_list[1] > 24) |( re_list[1]+re_list[2] > 31))) | \
-                                ((re_list[3] < datetime_now - timedelta(minutes=60))&((re_list[5] > 24) |( re_list[4]+re_list[5] > 31))) 
-                                ):
+                            if (
+                                (re_list[0] < datetime_now - timedelta(minutes=60))
+                                & ((re_list[1] > 24) | (re_list[1] + re_list[2] > 31))
+                            ) | (
+                                (re_list[3] < datetime_now - timedelta(minutes=60))
+                                & ((re_list[5] > 24) | (re_list[4] + re_list[5] > 31))
+                            ):
                                 alert_map[1].append(
-                                    f'2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%'
+                                    f"2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%"
                                 )
                     except Exception:
-                        self.update_log("2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%", "warn")
+                        self.update_log(
+                            "2.本场预计或目前已停止起飞或落地1小时以上，且直接影响航班总量大于其高峰小时容量的50%",
+                            "warn",
+                        )
                 case 3:
-
                     data = self.get_data("执行_离港", flightTypeCode=TYPECODE)
                     tis = {}
-                    
-                    for ti in ['stot','atot']:
-                        tis[f'{ti}_last_data'] = data.loc[data[ti] < datetime_now].loc[data[ti] > last_hour].__len__()
-                        tis[f'{ti}_one_data']  = data.loc[data[ti] < one_hour].loc[data[ti] > datetime_now].__len__()
-                        tis[f'{ti}_two_data']  = data.loc[data[ti] < two_hour].loc[data[ti] > one_hour].__len__()
-                    
+
+                    for ti in ["stot", "atot"]:
+                        tis[f"{ti}_last_data"] = (
+                            data.loc[data[ti] < datetime_now]
+                            .loc[data[ti] > last_hour]
+                            .__len__()
+                        )
+                        tis[f"{ti}_one_data"] = (
+                            data.loc[data[ti] < one_hour]
+                            .loc[data[ti] > datetime_now]
+                            .__len__()
+                        )
+                        tis[f"{ti}_two_data"] = (
+                            data.loc[data[ti] < two_hour]
+                            .loc[data[ti] > one_hour]
+                            .__len__()
+                        )
+
                     for i in tis.values():
                         assert isinstance(i, int)
 
-                    if ( tis['atot_last_data']<tis['stot_last_data'] & \
-                        (tis['stot_one_data'] - tis['atot_last_data']) > 0 & \
-                        (tis['stot_two_data'] - tis['atot_last_data']) > 0 & \
-                        (tis['stot_one_data']+tis['stot_two_data'])-tis['atot_last_data']*2 >9
-                        ):
+                    if (
+                        tis["atot_last_data"]
+                        < tis["stot_last_data"]
+                        & (tis["stot_one_data"] - tis["atot_last_data"])
+                        > 0 & (tis["stot_two_data"] - tis["atot_last_data"])
+                        > 0
+                        & (tis["stot_one_data"] + tis["stot_two_data"])
+                        - tis["atot_last_data"] * 2
+                        > 9
+                    ):
                         alert_map[1].append(
-                            f'3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限，且溢出航班总量大于其高峰小时容量的20%'
+                            f"3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限，且溢出航班总量大于其高峰小时容量的20%"
                         )
 
-                    if (tis['atot_last_data']<tis['stot_last_data'] & \
-                        (tis['stot_one_data'] - tis['atot_last_data'])/tis['atot_last_data'] > 0.2 & \
-                        (tis['stot_two_data'] - tis['atot_last_data'])/tis['atot_last_data'] > 0.2 & \
-                        (tis['stot_one_data']+tis['stot_two_data'])-tis['atot_last_data']*2 >24
-                        ):
+                    if (
+                        tis["atot_last_data"]
+                        < tis["stot_last_data"]
+                        & (tis["stot_one_data"] - tis["atot_last_data"])
+                        / tis["atot_last_data"]
+                        > 0.2
+                        & (tis["stot_two_data"] - tis["atot_last_data"])
+                        / tis["atot_last_data"]
+                        > 0.2
+                        & (tis["stot_one_data"] + tis["stot_two_data"])
+                        - tis["atot_last_data"] * 2
+                        > 24
+                    ):
                         alert_map[1].append(
-                            f'3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限20%以上，且溢出航班总量大于其高峰小时容量的50%'
+                            f"3.本场全向或特定方向，预计后续航班计划连续2小时超出保障能力上限20%以上，且溢出航班总量大于其高峰小时容量的50%"
                         )
                 case 4:
-                    last_two_hour = datetime_now - timedelta(minutes= 2 )
-                    data = self.get_data("航班", outFlightTypeCode=TYPECODE[:3])    # 筛选航班_性质为W/Z,C/B,L/W的航班
+                    last_two_hour = datetime_now - timedelta(minutes=2)
+                    data = self.get_data(
+                        "航班", outFlightTypeCode=TYPECODE[:3]
+                    )  # 筛选航班_性质为W/Z,C/B,L/W的航班
                     takeoffs = {}
                     count = 0
-                    for start_time,end_time in {last_two_hour:last_hour,last_hour:datetime_now}.items():
-                        data = data.loc[data["outSobt"] >= start_time].loc[data["outSobt"] < end_time].copy()  
+                    for start_time, end_time in {
+                        last_two_hour: last_hour,
+                        last_hour: datetime_now,
+                    }.items():
+                        data = (
+                            data.loc[data["outSobt"] >= start_time]
+                            .loc[data["outSobt"] < end_time]
+                            .copy()
+                        )
                         data = self.get_data("执行_进港", outFlightTypeCode=TYPECODE)
 
-
-                        for route in  ["ALL","CAN,SZX"]:
+                        for route in ["ALL", "CAN,SZX"]:
                             if route == "ALL":
                                 re_data = data
-                            else :
+                            else:
                                 for fly in route.slplit(","):
-                                    re_data += data[data['outRoute']==route]
+                                    re_data += data[data["outRoute"] == route]
                             if re_data.__len__():
-                                departing = re_data.loc[re_data["outAtot"].isna() | (re_data["outAtot"] > end_time)]
+                                departing = re_data.loc[
+                                    re_data["outAtot"].isna()
+                                    | (re_data["outAtot"] > end_time)
+                                ]
                                 takeoff_departing_delayed = departing.loc[
                                     departing["outStot"] < end_time
                                 ].__len__()
                                 re_data.drop(departing.index, inplace=True)
                                 # 起飞正常性
                                 try:
-                                    takeoff_departed = re_data.loc[re_data["outAtot"] <= re_data["outStot"]].__len__()
-                                    takeoff_delayed = re_data.__len__() - takeoff_departed
+                                    takeoff_departed = re_data.loc[
+                                        re_data["outAtot"] <= re_data["outStot"]
+                                    ].__len__()
+                                    takeoff_delayed = (
+                                        re_data.__len__() - takeoff_departed
+                                    )
                                     takeoff = takeoff_departed / (
-                                        takeoff_departed + takeoff_departing_delayed + takeoff_delayed
+                                        takeoff_departed
+                                        + takeoff_departing_delayed
+                                        + takeoff_delayed
                                     )
                                     takeoffs[f"{route}{count}"] = takeoff
                                 except ZeroDivisionError:
@@ -7420,57 +7529,73 @@ class AutoGui(tk.Tk):
 
                     for i in takeoffs.values():
                         assert isinstance(i, int)
-                    
-                    if ((takeoffs['ALL0'] < 0.5 & takeoffs['ALL1'] < 0.5 & takeoffs['ALL0'] != 0 & takeoffs['ALL1'] != 0) | \
-                        takeoffs["CAN,SZX0"] < 0.5 & takeoffs["CAN,SZX1" & takeoffs["CAN,SZX0"] !=0 , takeoffs["CAN,SZX0"] != 0] < 0.5
-                        ):
-                        alert_map[0].append(
-                            f'4.本场全向或特定方向，预计离港航班起飞正常率连续2小时低于50%'
+
+                    if (
+                        (
+                            takeoffs["ALL0"]
+                            < 0.5 & takeoffs["ALL1"]
+                            < 0.5 & takeoffs["ALL0"]
+                            != 0 & takeoffs["ALL1"]
+                            != 0
                         )
-                    
+                        | takeoffs["CAN,SZX0"]
+                        < 0.5
+                        & takeoffs[
+                            "CAN,SZX1" & takeoffs["CAN,SZX0"] != 0,
+                            takeoffs["CAN,SZX0"] != 0,
+                        ]
+                        < 0.5
+                    ):
+                        alert_map[0].append(
+                            f"4.本场全向或特定方向，预计离港航班起飞正常率连续2小时低于50%"
+                        )
+
                     data = self.get_data("执行_离港", flightTypeCode=TYPECODE)
-                    last_atot_len = (data.loc[data['atot'] > last_two_hour]
-                                     .loc[data['atot'] < datetime_now]
-                                     .__len__())
-                    last_stot_atot_len = (data.loc[data['atot'] > last_two_hour]
-                                     .loc[data['atot'] < datetime_now]
-                                     .loc[data['atot'].isna()]
-                                     .__len__())
-                    three_hour = (
-                        data.loc[data['stot'] > datetime_now]
-                        .loc[data['stot'] > datetime_now + timedelta(hours=3)]
+                    last_atot_len = (
+                        data.loc[data["atot"] > last_two_hour]
+                        .loc[data["atot"] < datetime_now]
                         .__len__()
                     )
-                    for i in [last_atot_len,last_stot_atot_len,three_hour]:
+                    last_stot_atot_len = (
+                        data.loc[data["atot"] > last_two_hour]
+                        .loc[data["atot"] < datetime_now]
+                        .loc[data["atot"].isna()]
+                        .__len__()
+                    )
+                    three_hour = (
+                        data.loc[data["stot"] > datetime_now]
+                        .loc[data["stot"] > datetime_now + timedelta(hours=3)]
+                        .__len__()
+                    )
+                    for i in [last_atot_len, last_stot_atot_len, three_hour]:
                         assert isinstance(i, int)
 
-                    if last_atot_len < (last_stot_atot_len+three_hour)/3:
+                    if last_atot_len < (last_stot_atot_len + three_hour) / 3:
                         alert_map[1].append(
-                            f'4.本场全向或特定方向，预计离港积压航班（判断逻辑）在3小时内无法消化完毕'
+                            f"4.本场全向或特定方向，预计离港积压航班（判断逻辑）在3小时内无法消化完毕"
                         )
 
                 case 5:
                     # 累计备降航班架次
                     data = self.get_data("执行_进港", outFlightTypeCode=TYPECODE)
-                    dival_count = data.loc[data["operationStatusCode"] == "DIVAL"
-                                           ].loc[data["operationStatusCode"] != "CNCL"
-                                                 ].__len__()
-                    if dival_count > 10 :
-                        alert_map[0].append(
-                            f'5.本场进港航班当日累计备降超过10班'
-                        )
+                    dival_count = (
+                        data.loc[data["operationStatusCode"] == "DIVAL"]
+                        .loc[data["operationStatusCode"] != "CNCL"]
+                        .__len__()
+                    )
+                    if dival_count > 10:
+                        alert_map[0].append(f"5.本场进港航班当日累计备降超过10班")
 
-                    qb_data = self.get_data("执行_进港", flightTypeCode=['Q/B'])
+                    qb_data = self.get_data("执行_进港", flightTypeCode=["Q/B"])
                     qb_count = 0
                     if qb_data.__len__():
-                        qb_list = qb_data['sibt'].dt.hour.to_list()
+                        qb_list = qb_data["sibt"].dt.hour.to_list()
                         qb_count = max([qb_list.count(item) for item in set(qb_list)])
 
                     if dival_count > 20 or qb_count > 10:
                         alert_map[1].append(
-                            f'5.本场进港航班1小时内备降超过10班，或当日累计备降超过20班'
+                            f"5.本场进港航班1小时内备降超过10班，或当日累计备降超过20班"
                         )
-
 
         alert = alert_map[max(alert)]
         alerts["大面积航延"] = alert[0]
@@ -7479,32 +7604,46 @@ class AutoGui(tk.Tk):
 
         # 四地十场
 
-    def fourlocation_tenvenuse(self,days: int = 0) -> tuple[str, str, str, str, int, int]:
-
+    def fourlocation_tenvenuse(
+        self, days: int = 0
+    ) -> tuple[str, str, str, str, int, int]:
         today, datetime_now = self.today(days), self.datetime_now()
-        start_time = datetime_now - timedelta(minutes= 1 )
-        end_time = datetime_now + timedelta(minutes= 1 )
-        data = self.get_data("航班", outFlightTypeCode=TYPECODE[:3])    # 筛选航班_性质为W/Z,C/B,L/W的航班
-        data = data.loc[data["outSobt"] >= start_time].loc[data["outSobt"] < end_time].copy()    # 
+        start_time = datetime_now - timedelta(minutes=1)
+        end_time = datetime_now + timedelta(minutes=1)
+        data = self.get_data(
+            "航班", outFlightTypeCode=TYPECODE[:3]
+        )  # 筛选航班_性质为W/Z,C/B,L/W的航班
+        data = (
+            data.loc[data["outSobt"] >= start_time]
+            .loc[data["outSobt"] < end_time]
+            .copy()
+        )  #
         takeoffs = {}
         # 广州、重庆、成都双流、成都天府、杭州、上海浦东、上海虹桥、深圳
-        for route in  ["CAN","CKG","CTU","TFU","HGH","PVG","SHA","SZX"]:
-            data_route = data[data['outRoute']==route]
+        for route in ["CAN", "CKG", "CTU", "TFU", "HGH", "PVG", "SHA", "SZX"]:
+            data_route = data[data["outRoute"] == route]
             if data_route.__len__():
-                departing = data_route.loc[data_route["outAtot"].isna() | (data_route["outAtot"] > datetime_now)]
+                departing = data_route.loc[
+                    data_route["outAtot"].isna()
+                    | (data_route["outAtot"] > datetime_now)
+                ]
                 takeoff_departing_delayed = departing.loc[
                     departing["outStot"] < datetime_now
                 ].__len__()
                 data_route.drop(departing.index, inplace=True)
                 # 起飞正常性
                 try:
-                    takeoff_departed = data_route.loc[data_route["outAtot"] <= data_route["outStot"]].__len__()
+                    takeoff_departed = data_route.loc[
+                        data_route["outAtot"] <= data_route["outStot"]
+                    ].__len__()
                     takeoff_delayed = data_route.__len__() - takeoff_departed
                     takeoff = takeoff_departed / (
                         takeoff_departed + takeoff_departing_delayed + takeoff_delayed
                     )
                     takeoff = (
-                        "100%" if takeoff == 1 else "{:.2f}%".format(round(takeoff * 100, 2))
+                        "100%"
+                        if takeoff == 1
+                        else "{:.2f}%".format(round(takeoff * 100, 2))
                     )
                     takeoffs[route] = takeoff
                 except ZeroDivisionError:
@@ -7795,7 +7934,7 @@ class AutoGui(tk.Tk):
                     delay_error -= count_mo + count_wo
                     msg_mo = msg_wo = msg_a = ""
 
-                    msg += f"因外站/航路降效导致延误{count_mo+count_wo}架次【"
+                    msg += f"因外站/航路降效导致延误{count_mo + count_wo}架次【"
                     msg += f"其他用户活动原因延误{count_mo}架次（"
                     for i in self.REGION.values():
                         count = military_other.loc[
@@ -7817,7 +7956,7 @@ class AutoGui(tk.Tk):
 
                     if count_mo + count_wo:
                         msg_finalized += (
-                            f"因外站/航路降效导致延误{count_mo+count_wo}架次【"
+                            f"因外站/航路降效导致延误{count_mo + count_wo}架次【"
                         )
                         if count_mo:
                             msg_finalized += (
@@ -7910,7 +8049,6 @@ class AutoGui(tk.Tk):
             extra_msg = ""
 
             if mass_delay and len(raw_delay):
-
                 extra_msg += end_time + msg_rates
                 start, end = today, min(datetime_now, today + timedelta(1))
 
@@ -8011,7 +8149,6 @@ class AutoGui(tk.Tk):
                 )
 
             if deice and len(raw_flight):
-
                 if not extra_msg:
                     extra_msg += (
                         prefix.pop()
@@ -8167,7 +8304,6 @@ class AutoGui(tk.Tk):
             )
 
     def get_search(self, name: str, code: str, insert=None, get_ga: bool = False):
-
         lc = len(code)
         payload = {"pageNum": 1, "pageSize": 100, "condition": {"name#like": name}}
 
@@ -8336,7 +8472,7 @@ class AutoGui(tk.Tk):
 
         table.bind("<Double-1>", get_ga)
         box.geometry(
-            f"538x300+{self.winfo_rootx()+self.winfo_width()//5}+{self.winfo_rooty()+self.winfo_height()//5}"
+            f"538x300+{self.winfo_rootx() + self.winfo_width() // 5}+{self.winfo_rooty() + self.winfo_height() // 5}"
         )
         box.minsize(width=538, height=160)
         box.resizable(False, True)
@@ -8353,7 +8489,7 @@ class AutoGui(tk.Tk):
         adj = tk.Toplevel(self, name="自动化调时")
         adj.title("自动化调时")
         adj.geometry(
-            f"+{self.winfo_rootx()+self.winfo_width()//3}+{self.winfo_rooty()+self.winfo_height()//8}"
+            f"+{self.winfo_rootx() + self.winfo_width() // 3}+{self.winfo_rooty() + self.winfo_height() // 8}"
         )
 
         cb_ls = tk.BooleanVar(adj, True)
@@ -8853,8 +8989,9 @@ class AutoGui(tk.Tk):
                             else (hour_max, slot_max, slot_max)
                         )
                         try:
-                            oc = int(origin_count.at[m, h]), int(
-                                oversize_count.at[m, h]
+                            oc = (
+                                int(origin_count.at[m, h]),
+                                int(oversize_count.at[m, h]),
                             )
                         except KeyError:
                             oc = 0, 0
@@ -9412,8 +9549,9 @@ class AutoGui(tk.Tk):
                     payload["flightId"], payload["id"] = flights.loc[
                         flights["flightNo"] == FlightNo, ["id", "adjId"]
                     ].values[0]
-                    payload["flightId"], payload["id"] = int(payload["flightId"]), int(
-                        payload["id"]
+                    payload["flightId"], payload["id"] = (
+                        int(payload["flightId"]),
+                        int(payload["id"]),
                     )
                     response = session.post(
                         self.URLS["调时更新"],
@@ -9713,7 +9851,7 @@ class AutoGui(tk.Tk):
         history.resizable(False, True)
         history.minsize(width=372, height=150)
         history.geometry(
-            f"372x300+{self.winfo_rootx()+self.winfo_width()//3}+{self.winfo_rooty()+self.winfo_height()//3}"
+            f"372x300+{self.winfo_rootx() + self.winfo_width() // 3}+{self.winfo_rooty() + self.winfo_height() // 3}"
         )
         history.bind("<Escape>", lambda x: history.destroy())
         history.mainloop()
@@ -9836,8 +9974,9 @@ class AutoGui(tk.Tk):
 
         def copy():
             try:
-                message.clipboard_clear(), message.clipboard_append(
-                    message.get(tk.SEL_FIRST, tk.SEL_LAST)
+                (
+                    message.clipboard_clear(),
+                    message.clipboard_append(message.get(tk.SEL_FIRST, tk.SEL_LAST)),
                 )
             except Exception:
                 ...
@@ -9879,7 +10018,7 @@ class AutoGui(tk.Tk):
 
         push.minsize(width=400, height=150)
         push.geometry(
-            f"600x300+{self.winfo_rootx()+self.winfo_width()//10}+{self.winfo_rooty()+self.winfo_height()//8}"
+            f"600x300+{self.winfo_rootx() + self.winfo_width() // 10}+{self.winfo_rooty() + self.winfo_height() // 8}"
         )
         push.mainloop()
 
@@ -9893,7 +10032,7 @@ class AutoGui(tk.Tk):
         autodelay.resizable(False, False)
         autodelay.bind("<Escape>", lambda *x: autodelay.destroy())
         autodelay.geometry(
-            f"+{self.winfo_rootx()+self.winfo_width()//5}+{self.winfo_rooty()+self.winfo_height()//10}"
+            f"+{self.winfo_rootx() + self.winfo_width() // 5}+{self.winfo_rooty() + self.winfo_height() // 10}"
         )
         if self.winfo_viewable():
             autodelay.transient(self)
